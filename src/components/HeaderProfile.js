@@ -5,7 +5,7 @@ import useUser from "../hooks/useUser";
 import UserContext from "../context/user";
 import { isUserFollowingProfile, toggleFollow } from "../services/firebase";
 
-const Header = ({
+const HeaderProfile = ({
   photosCount,
   profile: {
     docId: profileDocId,
@@ -25,9 +25,10 @@ const Header = ({
 
   const handleToggleFollow = async () => {
     setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
-    setFollowerCount({
+    setFollowerCount((prevState) => ({
+      ...prevState,
       followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1,
-    });
+    }));
     await toggleFollow(
       isFollowingProfile,
       user.docId,
@@ -113,9 +114,9 @@ const Header = ({
   );
 };
 
-export default Header;
+export default HeaderProfile;
 
-Header.propTypes = {
+HeaderProfile.propTypes = {
   photosCount: PropTypes.number.isRequired,
   followerCount: PropTypes.number.isRequired,
   setFollowerCount: PropTypes.func.isRequired,
@@ -124,7 +125,7 @@ Header.propTypes = {
     userId: PropTypes.string,
     fullName: PropTypes.string,
     username: PropTypes.string,
-    followers: PropTypes.string,
-    following: PropTypes.string,
+    followers: PropTypes.array,
+    following: PropTypes.array,
   }).isRequired,
 };

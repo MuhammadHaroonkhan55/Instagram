@@ -11,7 +11,10 @@ const UserProfile = ({ user }) => {
     ...newState,
   });
   const initialState = {
-    profile: {},
+    profile: {
+      followers: [],
+      following: [],
+    },
     photosCollection: [],
     followerCount: 0,
   };
@@ -24,13 +27,20 @@ const UserProfile = ({ user }) => {
   useEffect(() => {
     async function getProfileInfoAndPhotos() {
       const photos = await getUserPhotosByUserId(user.userId);
+      const followersCount = user?.followers?.length || 0;
       dispatch({
-        profile: user,
+        profile: {
+          ...user,
+          followers: user.followers || [],
+          following: user.following || [],
+        },
         photosCollection: photos,
-        followerCount: user?.followers?.length,
+        followerCount: followersCount,
       });
     }
-    getProfileInfoAndPhotos();
+    if (user?.userId) {
+      getProfileInfoAndPhotos();
+    }
   }, [user]);
 
   return (
